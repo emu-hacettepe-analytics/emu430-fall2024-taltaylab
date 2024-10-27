@@ -4,12 +4,48 @@ title: "Assignment 1"
 
 # Assignment 1
 
-```{r}
-1 + 1
-```
-
 My first assignment has two parts.
 
 ## (a)
 
+\# I choose the video with the speaker Mustafa Baydoğan who was studying at Boğaziçi University. He focused on multiobjective optimization problems and mainly talked about how data science can be integrated with industrial engineering.he emphasizes that, as industrial engineers, we are trained to understand the root cause of a problem, make a precise definition, and comprehend the entire system. He explains, with examples, how to build a forecasting model by analyzing past demand, transform raw data by applying filters, extract features, and feed them into machine learning algorithms.Also, regarding the questions of students, he highlights that students should learn by practicing data science.He mentions that industrial engineering graduates can succeed in data science and machine learning thanks to their ability to correctly define and solve problems. 
+
+##In the context of industrial engineering, which approaches are most effective for optimization problems, especially when working with uncertain or incomplete data?
+
+##answer:Stochastic modeling and robust optimization approaches are effective strategies for minimizing the impacts of uncertainties.
+
+###When working in the electricity sector, which of the following would not be used as data when predicting hourly electricity consumption for the next day? A-Unlicensed power plant production B-Weather conditions C-Turkey’s hourly production D- Consumption rate of Germany
+
+###answer: D
+
 ## (b)
+
+```{install.packages("dslabs")}
+library(dslabs)
+data("polls_us_election_2016")
+head(polls_us_election_2016)
+head(polls_us_election_2016, 10)
+sum(is.na(polls_us_election_2016))
+
+numeric_columns <- sapply(polls_us_election_2016, is.numeric)
+char_factor_columns <- sapply(polls_us_election_2016, function(col) is.character(col) || is.factor(col))
+
+polls_us_election_2016[, numeric_columns] <- lapply(polls_us_election_2016[, numeric_columns], function(col) {
+  col[is.na(col)] <- 2001
+  return(col)
+})
+
+polls_us_election_2016[, char_factor_columns] <- lapply(polls_us_election_2016[, char_factor_columns], function(col) {
+  if (is.factor(col)) {
+    col <- as.character(col)  
+  }
+  col[is.na(col)] <- "Tutku" 
+  return(col)
+})
+summary(polls_us_election_2016)
+colSums(is.na(polls_us_election_2016))
+
+head(polls_us_election_2016,10)
+```
+
+## 

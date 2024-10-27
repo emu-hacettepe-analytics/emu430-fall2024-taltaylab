@@ -46,14 +46,20 @@
     "href": "assignments/assignment-1.html",
     "title": "Assignment 1",
     "section": "",
-    "text": "1 + 1\n\n[1] 2\n\n\nMy first assignment has two parts."
+    "text": "My first assignment has two parts.\n\n\n# I choose the video with the speaker Mustafa Baydoğan who was studying at Boğaziçi University. He focused on multiobjective optimization problems and mainly talked about how data science can be integrated with industrial engineering.he emphasizes that, as industrial engineers, we are trained to understand the root cause of a problem, make a precise definition, and comprehend the entire system. He explains, with examples, how to build a forecasting model by analyzing past demand, transform raw data by applying filters, extract features, and feed them into machine learning algorithms.Also, regarding the questions of students, he highlights that students should learn by practicing data science.He mentions that industrial engineering graduates can succeed in data science and machine learning thanks to their ability to correctly define and solve problems. \n##In the context of industrial engineering, which approaches are most effective for optimization problems, especially when working with uncertain or incomplete data?\n##answer:Stochastic modeling and robust optimization approaches are effective strategies for minimizing the impacts of uncertainties.\n###When working in the electricity sector, which of the following would not be used as data when predicting hourly electricity consumption for the next day? A-Unlicensed power plant production B-Weather conditions C-Turkey’s hourly production D- Consumption rate of Germany\n###answer: D\n\n\n\n```{install.packages(“dslabs”)} library(dslabs) data(“polls_us_election_2016”) head(polls_us_election_2016) head(polls_us_election_2016, 10) sum(is.na(polls_us_election_2016))\nnumeric_columns &lt;- sapply(polls_us_election_2016, is.numeric) char_factor_columns &lt;- sapply(polls_us_election_2016, function(col) is.character(col) || is.factor(col))\npolls_us_election_2016[, numeric_columns] &lt;- lapply(polls_us_election_2016[, numeric_columns], function(col) { col[is.na(col)] &lt;- 2001 return(col) })\npolls_us_election_2016[, char_factor_columns] &lt;- lapply(polls_us_election_2016[, char_factor_columns], function(col) { if (is.factor(col)) { col &lt;- as.character(col)\n} col[is.na(col)] &lt;- “Tutku” return(col) }) summary(polls_us_election_2016) colSums(is.na(polls_us_election_2016))\nhead(polls_us_election_2016,10) ```",
+    "crumbs": [
+      "Assignment 1"
+    ]
   },
   {
     "objectID": "assignments.html",
     "href": "assignments.html",
     "title": "My Assignments",
     "section": "",
-    "text": "On this page, I showcase the assignment I conducted for the [term and year, e.g. Fall 2023] EMU 430 Data Analytics course.\nPlease use left menu to navigate through my assignments.\nThe most recent update to this page was made on October 25, 2023\n\n\n\n Back to top"
+    "text": "On this page, I showcase the assignment I conducted for the Fall 2024 EMU430 Data Analytics course.\nPlease use left menu to navigate through my assignments.\nThe most recent update to this page was made on October 10, 2024\n\n\n\n Back to top",
+    "crumbs": [
+      "My Assignments"
+    ]
   },
   {
     "objectID": "posts.html",
@@ -61,5 +67,25 @@
     "title": "My Blog",
     "section": "",
     "text": "This page is under construction.\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "assignments/assignment-1.html#a",
+    "href": "assignments/assignment-1.html#a",
+    "title": "Assignment 1",
+    "section": "",
+    "text": "# I choose the video with the speaker Mustafa Baydoğan who was studying at Boğaziçi University. He focused on multiobjective optimization problems and mainly talked about how data science can be integrated with industrial engineering.he emphasizes that, as industrial engineers, we are trained to understand the root cause of a problem, make a precise definition, and comprehend the entire system. He explains, with examples, how to build a forecasting model by analyzing past demand, transform raw data by applying filters, extract features, and feed them into machine learning algorithms.Also, regarding the questions of students, he highlights that students should learn by practicing data science.He mentions that industrial engineering graduates can succeed in data science and machine learning thanks to their ability to correctly define and solve problems. \n##In the context of industrial engineering, which approaches are most effective for optimization problems, especially when working with uncertain or incomplete data?\n##answer:Stochastic modeling and robust optimization approaches are effective strategies for minimizing the impacts of uncertainties.\n###When working in the electricity sector, which of the following would not be used as data when predicting hourly electricity consumption for the next day? A-Unlicensed power plant production B-Weather conditions C-Turkey’s hourly production D- Consumption rate of Germany\n###answer: D",
+    "crumbs": [
+      "Assignment 1"
+    ]
+  },
+  {
+    "objectID": "assignments/assignment-1.html#b",
+    "href": "assignments/assignment-1.html#b",
+    "title": "Assignment 1",
+    "section": "",
+    "text": "```{install.packages(“dslabs”)} library(dslabs) data(“polls_us_election_2016”) head(polls_us_election_2016) head(polls_us_election_2016, 10) sum(is.na(polls_us_election_2016))\nnumeric_columns &lt;- sapply(polls_us_election_2016, is.numeric) char_factor_columns &lt;- sapply(polls_us_election_2016, function(col) is.character(col) || is.factor(col))\npolls_us_election_2016[, numeric_columns] &lt;- lapply(polls_us_election_2016[, numeric_columns], function(col) { col[is.na(col)] &lt;- 2001 return(col) })\npolls_us_election_2016[, char_factor_columns] &lt;- lapply(polls_us_election_2016[, char_factor_columns], function(col) { if (is.factor(col)) { col &lt;- as.character(col)\n} col[is.na(col)] &lt;- “Tutku” return(col) }) summary(polls_us_election_2016) colSums(is.na(polls_us_election_2016))\nhead(polls_us_election_2016,10) ```",
+    "crumbs": [
+      "Assignment 1"
+    ]
   }
 ]
