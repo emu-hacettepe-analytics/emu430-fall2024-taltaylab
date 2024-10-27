@@ -16,25 +16,41 @@ title: "Assignment 1"
 
 ###When working in the electricity sector, which of the following would not be used as data when predicting hourly electricity consumption for the next day? A-Unlicensed power plant production B-Weather conditions C-Turkey’s hourly production D- Consumption rate of Germany
 
-###answer: D
+###answer:D
 
-(b) 
-
-install.packages("dslabs")
-
+```{r}
 library(dslabs)
-
 data("polls_us_election_2016")
+```
 
-head(polls_us_election_2016) head(polls_us_election_2016, 10)
+```{r}
+head(polls_us_election_2016)
+head(polls_us_election_2016, 10)
 
+```
+
+```{r}
 sum(is.na(polls_us_election_2016))
+```
 
-numeric_columns \<- sapply(polls_us_election_2016, is.numeric) char_factor_columns \<- sapply(polls_us_election_2016, function(col) is.character(col) \|\| is.factor(col))
+```{r}
+numeric_columns <- sapply(polls_us_election_2016, is.numeric)
+char_factor_columns <- sapply(polls_us_election_2016, function(col) is.character(col) || is.factor(col))
 
-polls_us_election_2016\[, numeric_columns\] \<- lapply(polls_us_election_2016\[, numeric_columns\], function(col) { col\[is.na(col)\] \<- 2001 return(col) })
+polls_us_election_2016[, numeric_columns] <- lapply(polls_us_election_2016[, numeric_columns], function(col) {
+  col[is.na(col)] <- 2001
+  return(col)
+})
 
-polls_us_election_2016\[, char_factor_columns\] \<- lapply(polls_us_election_2016\[, char_factor_columns\], function(col) { if (is.factor(col)) { col \<- as.character(col)\
-} col\[is.na(col)\] \<- "Tutku" return(col) }) summary(polls_us_election_2016) colSums(is.na(polls_us_election_2016))
+polls_us_election_2016[, char_factor_columns] <- lapply(polls_us_election_2016[, char_factor_columns], function(col) {
+  if (is.factor(col)) {
+    col <- as.character(col)  
+  }
+  col[is.na(col)] <- "Tutku" 
+  return(col)
+})
+summary(polls_us_election_2016)
+colSums(is.na(polls_us_election_2016))
 
 head(polls_us_election_2016,10)
+```
