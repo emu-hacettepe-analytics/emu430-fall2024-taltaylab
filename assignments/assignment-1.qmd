@@ -54,3 +54,5 @@ colSums(is.na(polls_us_election_2016))
 
 head(polls_us_election_2016,10)
 ```
+
+#bu odev hazırlanırken gptden yardı
