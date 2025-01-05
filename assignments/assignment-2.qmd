@@ -2,8 +2,244 @@
 title: "Assignment 2"
 ---
 
-# Assignment 2
+# This assignment will consist of codes for  part 2,part 3 and part 4. I sometimes used AI tools during prepearing my assignment.
+#PART 1 AND 2:
+# Install required packages if not already installed
+install.packages(c("tidyverse", "rvest", "stringr", "ggplot2"))
 
-```{r}
-1 + 1
-```
+# Load libraries
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(ggplot2)
+
+# Define the URLs (Your provided URLs)
+link1 <- "https://m.imdb.com/search/title/?title_type=feature&release_date=2010-01-01,2023-12-30&num_votes=2500,&country_of_origin=TR&count=250"
+link2 <- "https://m.imdb.com/search/title/?title_type=feature&release_date=,2009-12-31&num_votes=2500,&country_of_origin=TR&count=250"
+
+# Read HTML content for both links
+data_html1 <- read_html(link1)
+data_html2 <- read_html(link2)
+
+# Extract Titles (Movie Names) using the correct CSS selector
+title_names1 <- data_html1 %>% html_nodes(".ipc-title__text") %>% html_text()
+title_names2 <- data_html2 %>% html_nodes(".ipc-title__text") %>% html_text()
+
+# Combine both title vectors
+title_names <- c(title_names1, title_names2)
+
+# Extract Year using the correct CSS selector (ends with "-child(1)")
+years1 <- data_html1 %>% html_nodes(".dli-title-metadata-item:nth-child(1)") %>% html_text()
+years2 <- data_html2 %>% html_nodes(".dli-title-metadata-item:nth-child(1)") %>% html_text()
+
+# Combine both year vectors
+years <- c(years1, years2)
+
+# Convert Year to numeric
+years <- as.numeric(years)
+
+# Extract Duration using the correct CSS selector (ends with "-child(2)")
+duration1 <- data_html1 %>% html_nodes(".dli-title-metadata-item:nth-child(2)") %>% html_text()
+duration2 <- data_html2 %>% html_nodes(".dli-title-metadata-item:nth-child(2)") %>% html_text()
+
+# Combine both duration vectors
+duration <- c(duration1, duration2)
+
+# Convert Duration to total minutes (e.g., '1h 31m' becomes 91 minutes)
+duration <- str_extract(duration, "\\d+h") %>%  # Extract hours
+  str_replace_all("h", "") %>% as.numeric() * 60 +  # Convert hours to minutes
+  str_extract(duration, "\\d+m") %>%  # Extract minutes
+  str_replace_all("m", "") %>% as.numeric()  # Remove 'm' and convert to numeric
+
+# Extract Rating using the correct CSS selector (".ratingGroup--imdb-rating")
+ratings1 <- data_html1 %>% html_nodes(".ratingGroup--imdb-rating") %>% html_text()
+ratings2 <- data_html2 %>% html_nodes(".ratingGroup--imdb-rating") %>% html_text()
+
+# Combine both rating vectors
+ratings <- c(ratings1, ratings2)
+
+# Extract numeric rating (e.g., '5.4B' becomes 5.4)
+ratings <- str_extract(ratings, "\\d+\\.\\d+") %>% as.numeric()
+
+# Extract Votes using the correct CSS selector (".ipc-rating-star--voteCount")
+votes1 <- data_html1 %>% html_nodes(".ipc-rating-star--voteCount") %>% html_text()
+votes2 <- data_html2 %>% html_nodes(".ipc-rating-star--voteCount") %>% html_text()
+
+# Combine both vote vectors
+votes <- c(votes1, votes2)
+
+# Clean and convert votes (e.g., '6,848' becomes 6848)
+votes <- str_replace_all(votes, "Votes", "") %>%  # Remove the word "Votes"
+  str_replace_all(., ",", "") %>%        # Correctly remove commas (apply to the result)
+  as.numeric()  # Convert to numeric
+
+# Create Data Frame
+movies_df <- data.frame(
+  Title = title_names,
+  Year = years,
+  Duration = duration,
+  Rating = ratings,
+  Votes = votes
+)
+
+# Display the first few rows of the data frame
+head(movies_df)
+
+
+# NECESSARY CODE FOR PART 3 :
+# Exploratory Data Analysis (EDA)
+
+# a. Top 5 and Bottom 5 Movies based on Ratings
+top_rated_movies <- movies_df %>%
+  arrange(desc(Rating)) %>%
+  head(5)
+
+bottom_rated_movies <- movies_df %>%
+  arrange(Rating) %>%
+  head(5)
+
+print("Top 5 Movies based on Ratings:")
+print(top_rated_movies)
+
+print("Bottom 5 Movies based on Ratings:")
+print(bottom_rated_movies)
+
+# b. Check your favorite movies ratings
+favorites <- c("Babam ve Oglum", "G.O.R.A.", "Kis Uykusu")
+favorite_movie_data <- movies_df %>%
+  filter(Title %in% favorites)
+
+print("Favorite Movies Ratings:")
+print(favorite_movie_data)
+
+# c. Yearly rating averages and movie counts
+ratings_per_year <- movies_df %>%
+  group_by(Year) %>%
+  summarise(Average_Rating = mean(Rating, na.rm = TRUE), Movie_Count = n())
+
+# Plot Average Rating Over the Years
+ggplot(ratings_per_year, aes(x = Year, y = Average_Rating)) +
+  geom_point(color = "blue", size = 3, alpha = 0.8) +
+  geom_line(color = "darkblue", size = 1) +
+  labs(
+    title = "Average IMDb Rating Over the Years",
+    x = "Year",
+    y = "Average IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14)
+
+# Plot Number of Movies Released Per Year
+ggplot(ratings_per_year, aes(x = Year, y = Movie_Count)) +
+  geom_bar(stat = "identity", fill = "steelblue", color = "black", width = 0.8) +
+  labs(
+    title = "Number of Movies Released Per Year",
+    x = "Year",
+    y = "Movie Count",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14)
+
+# Plot Boxplot of Ratings Over the Years (Boxplots instead of averages to avoid misleading results)
+ggplot(movies_df, aes(x = factor(Year), y = Rating)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(
+    title = "Boxplot of Ratings Over the Years",
+    x = "Year",
+    y = "IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14)
+
+# d. Correlation between Votes and Ratings
+correlation_votes_ratings <- cor(movies_df$Votes, movies_df$Rating, use = "complete.obs")
+print(paste("Correlation between Votes and Ratings: ", correlation_votes_ratings))
+
+ggplot(movies_df, aes(x = Votes, y = Rating)) +
+  geom_point(color = "blue", alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", color = "red", se = TRUE, linetype = "dashed") +
+  labs(
+    title = "Relationship Between IMDb Ratings and Vote Counts",
+    x = "Vote Count",
+    y = "IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14)
+
+# e. Correlation between Duration and Ratings
+duration_rating_correlation <- cor(movies_df$Duration, movies_df$Rating, use = "complete.obs")
+print(paste("Correlation between Duration and Ratings: ", duration_rating_correlation))
+
+ggplot(movies_df, aes(x = Duration, y = Rating)) +
+  geom_point(color = "darkorange", alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", color = "blue", se = TRUE, linetype = "dotted") +
+  labs(
+    title = "Relationship Between IMDb Ratings and Movie Duration",
+    x = "Movie Duration (minutes)",
+    y = "IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14)
+
+
+#  CODE RELATED TO PART 4:
+# Load required libraries
+library(tidyverse)
+library(rvest)
+library(stringr)
+
+# Define the URL for the Top 1000 Turkish Movies on IMDb
+top_1000_url <- "https://m.imdb.com/search/title/?title_type=feature&groups=top_1000&country_of_origin=TR"
+
+# Read HTML content from the URL
+top_1000_html <- read_html(top_1000_url)
+
+# Extract Titles (Movie Names) using the correct CSS selector
+top_1000_titles <- top_1000_html %>%
+  html_nodes(".ipc-title__text") %>%
+  html_text() %>%
+  tail(-1) %>%  # Remove the first element, which is not a movie title
+  head(-1)      # Remove the last element, which is also not a movie title
+
+# Extract Year using the correct CSS selector (ends with "-child(1)")
+top_1000_years <- top_1000_html %>%
+  html_nodes(".sc-300a8231-7.eaXxft.dli-title-metadata-item:nth-child(1)") %>%
+  html_text() %>%
+  as.numeric()
+
+# Create a data frame for the top 1000 movies containing only Title and Year
+top_1000_df <- data.frame(
+  Title = top_1000_titles,
+  Year = top_1000_years
+)
+
+# Ensure titles are trimmed of extra spaces
+top_1000_df$Title <- trimws(top_1000_df$Title)
+
+# Display the top 1000 Turkish movies data frame
+print(top_1000_df)
+# Order the top 11 movies based on their rank (position in the IMDb Top 1000 list)
+# The order of the movies in the dataframe is their rank, so we can take the first 11 as they are ranked.
+ordered_top_1000_df <- top_1000_df %>%
+  head(11)  # Select the first 11 movies as per the rank in the IMDb Top 1000 list
+
+# Order the initial data frame (movies_df) based on Rating in descending order
+top_11_initial <- movies_df %>%
+  arrange(desc(Rating)) %>%
+  head(11)  # Select the top 11 movies from the initial data frame based on ratings
+
+# Step 2: Check if the top 11 ranked movies in the IMDb Top 1000 list are the same as in the initial data frame
+same_movies <- all(ordered_top_1000_df$Title %in% top_11_initial$Title)
+
+# Step 3: Output the results
+print("Top 11 Movies Ordered by Rank from the IMDb Top 1000 List:")
+print(ordered_top_1000_df)
+
+print("Top 11 Movies Ordered by Rating from the Initial Data Frame:")
+print(top_11_initial)
+
+if (same_movies) {
+  print("Yes, the first high-rated 11 movies in the Top 1000 are the same as in the initial data frame. This implies that IMDb might be using ratings alone to determine the top 1000 movie list.")
+} else {
+  print("No, the first high-rated 11 movies in the Top 1000 are not the same as in the initial data frame. This suggests that IMDb's Top 1000 list might take other factors into account, such as popularity, vote count, or other ranking algorithms.")
+}
